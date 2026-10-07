@@ -1,30 +1,24 @@
 ---
+/**
+ * thank-you.astro — formsubmit.co redirect target for QuoteForm's _next
+ * field. Not one of the 8 primary pages, but required for the quote form's
+ * success redirect to land somewhere real instead of a 404.
+ */
 import Layout from "../components/Layout.astro";
-import { site, hasPhone, telHref } from "../lib/site";
-import { services } from "../data/services";
+import { site } from "../lib/site";
 ---
 
-<Layout title={`Thank You | ${site.businessName}`} description="Your estimate request has been received." noindex>
-  <section class="bg-sand py-20 sm:py-28">
-    <div class="mx-auto max-w-2xl px-4 text-center sm:px-6">
-      <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white">
-        <svg class="h-8 w-8" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </div>
-      <h1 class="mt-6 text-4xl sm:text-5xl">Thank you. We got your request.</h1>
-      <p class="mt-5 text-lg text-muted">
-        A {site.businessName} specialist will review your details and reach out shortly to schedule your free in-home water test and estimate.
-      </p>
-      {hasPhone && (
-        <p class="mt-4 text-lg text-muted">
-          Need us sooner? Call <a href={telHref(site.phoneNumber)} class="font-semibold text-primary underline underline-offset-4 hover:text-accent">{site.phoneNumber}</a>.
-        </p>
-      )}
-      <div class="mt-8 flex flex-wrap justify-center gap-3">
-        <a href="/" class="inline-flex rounded-brand bg-accent px-6 py-3 font-semibold text-white shadow-card hover:bg-accent-dark">Back to home</a>
-        <a href={`/${services[0]?.slug}/`} class="inline-flex rounded-brand border-2 border-primary px-6 py-3 font-semibold text-primary hover:bg-primary-light">Explore installation</a>
-      </div>
+<Layout title="Thank You" description="Your water softener quote request has been received." noindex>
+  <section class="section thank-you">
+    <div class="container">
+      <h1>Thanks — We've Got Your Request</h1>
+      <p>A member of our {site.city} team will follow up shortly with your free water softener quote.</p>
+      <a class="btn btn-primary" href="/">Back to Home</a>
     </div>
   </section>
+
+  <style>
+    .thank-you { text-align: center; padding-block: clamp(80px, 14vw, 160px); }
+    .thank-you p { max-width: 48ch; margin: 0 auto 24px; color: var(--color-text-muted); }
+  </style>
 </Layout>
