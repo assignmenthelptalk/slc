@@ -1,0 +1,265 @@
+---
+import { Image } from "astro:assets";
+import Layout from "../components/Layout.astro";
+import LeadForm from "../components/LeadForm.astro";
+import FaqList from "../components/FaqList.astro";
+import heroImage from "../assets/images/hero-slc.webp";
+import { site, isConfirmed } from "../lib/site";
+import { getService, services } from "../data/services";
+import { locations } from "../data/locations";
+import { homeFaqs } from "../data/homeFaqs";
+
+// The six core services in the order required for the homepage. Replacement
+// has no dedicated page, so it links to the installation page.
+const coreServices = [
+  { h3: "Water Softener Installation", slug: "water-softener-installation-salt-lake-city", blurb: "Right-sized salt-based systems installed cleanly, tested, and explained before we leave." },
+  { h3: "Water Softener Replacement", slug: "water-softener-installation-salt-lake-city", blurb: "Is your old unit failing or undersized? We remove it, reuse sound plumbing, and install a modern, efficient replacement." },
+  { h3: "Salt-Free Water Softener Systems", slug: "salt-free-water-softener-salt-lake-city", blurb: "Low-maintenance scale prevention with no salt, no brine discharge, and no electricity." },
+  { h3: "Water Softener Repair & Service", slug: "water-softener-repair-salt-lake-city", blurb: "Diagnosis and repair for units that stopped softening, leak, or will not regenerate." },
+  { h3: "Whole House Water Filtration", slug: "whole-house-water-filtration-salt-lake-city", blurb: "Cleaner, better-tasting water at every tap, with chlorine, sediment, and odor reduction." },
+  { h3: "Water Quality Testing", slug: "water-quality-testing-salt-lake-city", blurb: "A free on-site test for hardness, iron, TDS, and chlorine, so you buy only what you need." },
+];
+
+const moreServices = [
+  "hard-water-treatment-salt-lake-city",
+  "well-water-treatment-salt-lake-city",
+  "reverse-osmosis-installation-salt-lake-city",
+  "iron-filter-installation-salt-lake-city",
+  "water-softener-maintenance-salt-lake-city",
+].flatMap((slug) => {
+  const s = getService(slug);
+  return s ? [s] : [];
+});
+
+const valueProps = [
+  { title: "Salt Lake Valley specialists", body: "We work only on valley water, so we know the hardness, the plumbing in older and newer homes, and what actually works here." },
+  { title: "Free in-home water test", body: "Every estimate starts with a hardness test on your own tap, so the system is sized to your water instead of a guess." },
+  { title: "Upfront written estimates", body: "You get a clear written price before any work starts, with no pressure and no surprise add-ons." },
+  { title: "Clean, code-compliant installs", body: "Air-gapped drain lines, labeled bypass valves, and tidy plumbing, with the work area left cleaner than we found it." },
+  { title: "Warranty-backed work", body: "Equipment carries the manufacturer's warranty and our workmanship terms are put in writing before you sign." },
+  { title: "Honest recommendations", body: "If salt-free, a repair, or just a filter is the better answer, we say so, even when it means a smaller job." },
+];
+
+const confirmedStats = [
+  { label: "Years of experience", value: site.trust.yearsExperience },
+  { label: "License", value: site.trust.licenseNumber },
+  { label: "Warranty", value: site.trust.warrantyTerms },
+  { label: "Service guarantee", value: site.trust.guarantee },
+].filter((s) => isConfirmed(s.value));
+
+const steps = [
+  { title: "Free estimate and water test", body: "We visit your home, test your water hardness on-site, look at your plumbing, and ask how your household uses water." },
+  { title: "Custom system recommendation", body: "We size a system to your hardness and household, and explain salt-based versus salt-free in plain terms." },
+  { title: "Clear written quote", body: "You receive a fixed written price with no obligation. Take your time and compare." },
+  { title: "Professional installation", body: "We install on your main line with a bypass, a code-compliant drain, and a clean finish, usually in a single visit." },
+  { title: "Testing and walkthrough", body: "We re-test your water, program the system, and show you how to add salt and read the settings." },
+];
+
+const slcNeighborhoods = ["Downtown", "Sugar House", "The Avenues", "Capitol Hill", "Rose Park", "Federal Heights", "Yalecrest", "Glendale", "East Bench"];
+
+const problems = [
+  { title: "Limescale everywhere", body: "White, chalky scale builds up on faucets, shower heads, and glass, and the film on dishes and shower doors never fully wipes away." },
+  { title: "Dry skin and dull hair", body: "Hard water leaves soap residue behind, so skin feels tight and itchy and hair feels coated and dull." },
+  { title: "Appliance damage", body: "Scale insulates heating elements and clogs valves, so water heaters, dishwashers, and washing machines work harder and wear out sooner." },
+];
+---
+
+<Layout title={site.title} description={site.metaDescription}>
+  <!-- 2. Hero -->
+  <section class="relative isolate overflow-hidden bg-primary-dark text-white">
+    <Image
+      src={heroImage}
+      alt=""
+      width={1200}
+      loading="eager"
+      fetchpriority="high"
+      class="absolute inset-0 -z-10 h-full w-full object-cover"
+    />
+    <div class="absolute inset-0 -z-10 bg-linear-to-r from-primary-dark/85 via-primary-dark/55 to-primary-dark/10"></div>
+    <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:py-32">
+      <div class="max-w-3xl">
+        <p class="mb-4 text-sm font-semibold uppercase tracking-widest text-white/80">Salt Lake City, UT</p>
+        <h1 class="text-4xl text-white sm:text-5xl lg:text-6xl">{site.h1}</h1>
+        <p class="mt-6 max-w-2xl text-lg text-white/90 sm:text-xl">
+          Hard water is rough on Salt Lake City homes. We install, repair, and replace water softeners for homeowners across the valley, with free in-home testing and upfront pricing.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a
+            href="#estimate"
+            class="inline-flex items-center justify-center rounded-brand bg-accent px-8 py-4 text-lg font-semibold text-white shadow-float transition-transform hover:-translate-y-0.5 hover:bg-accent-dark active:scale-[0.98]"
+          >
+            Get a Free Estimate
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Lead opt-in form -->
+  <section id="estimate" class="bg-sand py-16 sm:py-20">
+    <div class="mx-auto grid max-w-7xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-5">
+      <div class="lg:col-span-2">
+        <p class="font-heading text-3xl tracking-tight text-primary sm:text-4xl">Free estimates for Salt Lake Valley homeowners</p>
+        <p class="mt-4 text-lg text-muted">
+          Tell us about your home and your water problem. We will test your water, recommend the right system, and send a written estimate with no obligation.
+        </p>
+      </div>
+      <div class="lg:col-span-3">
+        <LeadForm idPrefix="home" context="Homepage" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Why choose us -->
+  <section class="py-16 sm:py-24">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6">
+      <h2 class="max-w-3xl text-3xl sm:text-4xl">Why SLC Elite Water Softener is Salt Lake City's Most Trusted Water Softener Company</h2>
+      {confirmedStats.length > 0 && (
+        <dl class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {confirmedStats.map((s) => (
+            <div class="rounded-brand bg-primary px-5 py-4 text-white">
+              <dd class="font-heading text-2xl">{s.value}</dd>
+              <dt class="text-sm text-white/75">{s.label}</dt>
+            </div>
+          ))}
+        </dl>
+      )}
+      <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {valueProps.map((v) => (
+          <li class="rounded-brand border border-line bg-white p-6 shadow-card">
+            <svg class="h-7 w-7 text-accent" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <h3 class="mt-3 text-xl">{v.title}</h3>
+            <p class="mt-2 text-muted">{v.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 5. Core services -->
+  <section class="bg-primary-light py-16 sm:py-24">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6">
+      <h2 class="text-3xl sm:text-4xl">Water Softener Services in Salt Lake City, UT</h2>
+      <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {coreServices.map((s) => (
+          <article class="flex flex-col rounded-brand bg-white p-6 shadow-card transition-transform hover:-translate-y-1">
+            <h3 class="text-2xl">{s.h3}</h3>
+            <p class="mt-3 grow text-muted">{s.blurb}</p>
+            <a href={`/${s.slug}/`} class="mt-5 inline-flex items-center gap-2 font-semibold text-accent hover:text-accent-dark">
+              Learn more
+              <span class="sr-only">about {s.h3}</span>
+              <svg class="h-4 w-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </a>
+          </article>
+        ))}
+      </div>
+      <p class="mt-10 text-muted">
+        We also provide{" "}
+        {moreServices.map((s, i) => (
+          <>
+            <a href={`/${s.slug}/`} class="font-semibold text-primary underline underline-offset-4 hover:text-accent">{s.label.toLowerCase()}</a>{i < moreServices.length - 2 ? ", " : i === moreServices.length - 2 ? ", and " : "."}
+          </>
+        ))}
+      </p>
+    </div>
+  </section>
+
+  <!-- 6. Hard water problem -->
+  <section class="py-16 sm:py-24">
+    <div class="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-5">
+      <div class="lg:col-span-3">
+        <h2 class="text-3xl sm:text-4xl">Salt Lake City's Hard Water Problem</h2>
+        <p class="mt-5 text-lg text-muted">
+          Salt Lake City sits in the Great Salt Lake basin, the old bed of ancient Lake Bonneville, ringed by the limestone and dolomite of the Wasatch and Oquirrh ranges. Snowmelt and groundwater travel through that mineral-rich rock on the way to your tap and pick up dissolved calcium and magnesium along the way. Those two minerals are what make water hard.
+        </p>
+        <p class="mt-4 text-lg text-muted">
+          The valley's tap water comes from mountain streams, reservoirs, and groundwater wells rather than from the lake itself, and hardness can differ from one neighborhood to the next. Across the valley it commonly lands in the hard to very hard range.
+        </p>
+        <h3 class="mt-10 text-2xl">What hard water does to your home</h3>
+        <ul class="mt-5 grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+          {problems.map((p) => (
+            <li class="rounded-brand border border-line p-5">
+              <h4 class="font-heading text-xl text-primary">{p.title}</h4>
+              <p class="mt-2 text-muted">{p.body}</p>
+            </li>
+          ))}
+        </ul>
+        <p class="mt-8 text-lg text-muted">
+          A water softener solves the cause rather than the symptoms. It swaps hardness minerals for sodium or potassium before the water reaches your pipes, so scale never forms, soap lathers properly, and appliances run the way they were designed to. Read more on our
+          <a href="/hard-water-treatment-salt-lake-city/" class="font-semibold text-primary underline underline-offset-4 hover:text-accent">hard water treatment</a>
+          page.
+        </p>
+      </div>
+      <aside class="lg:col-span-2" aria-label="Salt Lake City water hardness">
+        <div class="rounded-brand bg-primary p-8 text-white shadow-float">
+          <p class="text-sm font-semibold uppercase tracking-widest text-white/70">Typical Salt Lake City hardness</p>
+          <p class="mt-3 font-heading text-6xl text-white sm:text-7xl">{site.gpgLow}&ndash;{site.gpgHigh}</p>
+          <p class="mt-1 text-xl text-white/90">grains per gallon (GPG)</p>
+          <p class="mt-4 inline-block rounded-full bg-accent px-4 py-1 text-sm font-bold uppercase tracking-wider">{site.gpgLabel}</p>
+          <p class="mt-6 text-sm text-white/75">
+            An estimated range. Actual hardness depends on your street and water source, so we measure it at your tap for free.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 7. How it works -->
+  <section class="bg-sand py-16 sm:py-24">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6">
+      <h2 class="text-3xl sm:text-4xl">Our Water Softener Installation Process</h2>
+      <ol class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-5">
+        {steps.map((s, i) => (
+          <li class="relative rounded-brand bg-white p-6 pt-10 shadow-card">
+            <span class="absolute -top-5 left-6 flex h-11 w-11 items-center justify-center rounded-full bg-accent font-heading text-xl text-white shadow-card">{i + 1}</span>
+            <h3 class="text-xl">{s.title}</h3>
+            <p class="mt-2 text-muted">{s.body}</p>
+          </li>
+        ))}
+      </ol>
+      <p class="mt-8 text-muted">
+        Ready to start? <a href="#estimate" class="font-semibold text-accent underline underline-offset-4 hover:text-accent-dark">Request your free estimate</a> or see the full
+        <a href={`/${services[0]?.slug}/`} class="font-semibold text-primary underline underline-offset-4 hover:text-accent">installation details</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- 8. FAQ -->
+  <section class="py-16 sm:py-24">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6">
+      <h2 class="text-3xl sm:text-4xl">Frequently Asked Questions About Water Softeners in Salt Lake City</h2>
+      <div class="mt-10">
+        <FaqList faqs={homeFaqs} />
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. Service areas -->
+  <section id="areas" class="bg-primary py-16 text-white sm:py-24">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6">
+      <h2 class="text-3xl text-white sm:text-4xl">Areas We Serve</h2>
+      <p class="mt-4 max-w-3xl text-lg text-white/85">
+        We install and service water softeners throughout Salt Lake City, including {slcNeighborhoods.join(", ")}, and in the surrounding suburbs below.
+      </p>
+      <ul class="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {locations.map((l) => (
+          <li>
+            <a
+              href={`/${l.slug}/`}
+              class="flex items-center justify-between rounded-brand border border-white/20 bg-white/5 px-5 py-4 font-semibold text-white transition-transform hover:-translate-y-0.5 hover:bg-white/10"
+            >
+              <span>{l.city}, UT</span>
+              <svg class="h-4 w-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Layout>

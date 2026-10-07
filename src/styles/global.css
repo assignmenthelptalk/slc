@@ -1,0 +1,47 @@
+/* Site-wide resets and typography only. Component styles stay in Tailwind classes. */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background: #fff;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer base {
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+  color: var(--color-primary);
+  line-height: 1.15;
+}
+
+h1,
+h2 {
+  letter-spacing: -0.03em;
+}
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+details > summary {
+  list-style: none;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

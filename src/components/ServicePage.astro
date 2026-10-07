@@ -1,0 +1,113 @@
+---
+import Layout from "./Layout.astro";
+import InnerHero from "./InnerHero.astro";
+import LeadForm from "./LeadForm.astro";
+import FaqList from "./FaqList.astro";
+import JsonLd from "./JsonLd.astro";
+import { site } from "../lib/site";
+import { getService, type Service } from "../data/services";
+import { locations } from "../data/locations";
+
+interface Props {
+  service: Service;
+}
+const { service } = Astro.props;
+
+const related = service.related.flatMap((slug) => {
+  const s = getService(slug);
+  return s ? [s] : [];
+});
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: service.name,
+  serviceType: service.name,
+  description: service.metaDesc,
+  provider: { "@id": `${site.siteUrl}/#business` },
+  areaServed: { "@type": "City", name: site.city },
+  url: `${site.siteUrl}/${service.slug}/`,
+};
+---
+
+<Layout title={service.metaTitle} description={service.metaDesc}>
+  <InnerHero
+    trail={[{ name: service.name }]}
+    h1={service.h1}
+    lead={service.summary}
+  />
+
+  <section class="py-14 sm:py-20">
+    <div class="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-3">
+      <div class="lg:col-span-2">
+        {service.intro.map((p) => <p class="mb-5 text-lg text-muted">{p}</p>)}
+
+        <h2 class="mt-10 text-3xl">{service.includedHeading}</h2>
+        <ul class="mt-5 space-y-3">
+          {service.included.map((item) => (
+            <li class="flex gap-3">
+              <svg class="mt-1.5 h-5 w-5 shrink-0 text-accent" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span class="text-muted">{item}</span>
+            </li>
+          ))}
+        </ul>
+
+        <h2 class="mt-12 text-3xl">{service.signsHeading}</h2>
+        <ul class="mt-5 grid gap-3 sm:grid-cols-2">
+          {service.signs.map((s) => (
+            <li class="rounded-brand border border-line bg-white px-4 py-3 text-muted shadow-card">{s}</li>
+          ))}
+        </ul>
+
+        <p class="mt-10 text-muted">
+          {service.name} is one of several services from
+          <a href="/" class="font-semibold text-primary underline underline-offset-4 hover:text-accent">{site.businessName}</a>,
+          serving homeowners across {site.city}, {site.stateAbbr}.
+        </p>
+      </div>
+
+      <div id="estimate" class="lg:sticky lg:top-24 lg:self-start">
+        <LeadForm heading="Request a Free Estimate" idPrefix="svc" context={service.name} />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-sand py-14 sm:py-20">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6">
+      <h2 class="text-3xl">{service.name} FAQs</h2>
+      <div class="mt-8"><FaqList faqs={service.faqs} /></div>
+    </div>
+  </section>
+
+  <section class="py-14 sm:py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6">
+      <h2 class="text-3xl">Related services</h2>
+      <ul class="mt-8 grid gap-4 md:grid-cols-3">
+        {related.map((r) => (
+          <li>
+            <a href={`/${r.slug}/`} class="block h-full rounded-brand border border-line bg-white p-5 shadow-card transition-transform hover:-translate-y-1">
+              <span class="font-heading text-xl text-primary">{r.name}</span>
+              <span class="mt-2 block text-muted">{r.summary}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <h2 class="mt-16 text-3xl">Where we provide {service.name.toLowerCase()}</h2>
+      <p class="mt-3 text-muted">Serving {site.city} and these nearby cities:</p>
+      <ul class="mt-6 flex flex-wrap gap-3">
+        {locations.map((l) => (
+          <li>
+            <a href={`/${l.slug}/`} class="inline-block rounded-full border border-line bg-white px-4 py-2 font-semibold text-primary hover:border-accent hover:text-accent">{l.city}</a>
+          </li>
+        ))}
+      </ul>
+      <p class="mt-10">
+        <a href="/" class="font-semibold text-accent underline underline-offset-4 hover:text-accent-dark">&larr; Back to {site.businessName} home</a>
+      </p>
+    </div>
+  </section>
+  <JsonLd data={serviceSchema} />
+</Layout>

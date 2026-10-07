@@ -1,0 +1,30 @@
+---
+import Layout from "../components/Layout.astro";
+import { site, hasPhone, telHref } from "../lib/site";
+import { services } from "../data/services";
+---
+
+<Layout title={`Thank You | ${site.businessName}`} description="Your estimate request has been received." noindex>
+  <section class="bg-sand py-20 sm:py-28">
+    <div class="mx-auto max-w-2xl px-4 text-center sm:px-6">
+      <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white">
+        <svg class="h-8 w-8" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+      <h1 class="mt-6 text-4xl sm:text-5xl">Thank you. We got your request.</h1>
+      <p class="mt-5 text-lg text-muted">
+        A {site.businessName} specialist will review your details and reach out shortly to schedule your free in-home water test and estimate.
+      </p>
+      {hasPhone && (
+        <p class="mt-4 text-lg text-muted">
+          Need us sooner? Call <a href={telHref(site.phoneNumber)} class="font-semibold text-primary underline underline-offset-4 hover:text-accent">{site.phoneNumber}</a>.
+        </p>
+      )}
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <a href="/" class="inline-flex rounded-brand bg-accent px-6 py-3 font-semibold text-white shadow-card hover:bg-accent-dark">Back to home</a>
+        <a href={`/${services[0]?.slug}/`} class="inline-flex rounded-brand border-2 border-primary px-6 py-3 font-semibold text-primary hover:bg-primary-light">Explore installation</a>
+      </div>
+    </div>
+  </section>
+</Layout>

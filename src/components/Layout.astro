@@ -1,0 +1,56 @@
+---
+import { SEO } from "astro-seo";
+import Header from "./Header.astro";
+import Footer from "./Footer.astro";
+import LocalBusinessSchema from "./LocalBusinessSchema.astro";
+import { site } from "../lib/site";
+import "../styles/global.css";
+import "../styles/tailwind.css";
+
+interface Props {
+  /** Full literal <title> text */
+  title: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const { title, description = site.metaDescription, noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, site.siteUrl).toString();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <SEO
+      title={title}
+      description={description}
+      canonical={canonical}
+      noindex={noindex}
+      nofollow={noindex}
+      openGraph={{
+        basic: { title, type: "website", image: `${site.siteUrl}/og-image.png`, url: canonical },
+        optional: { description, siteName: site.businessName, locale: "en_US" },
+      }}
+      twitter={{ card: "summary_large_image" }}
+    />
+    <LocalBusinessSchema />
+    <slot name="head" />
+  </head>
+  <body>
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-brand focus:bg-white focus:px-4 focus:py-2">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

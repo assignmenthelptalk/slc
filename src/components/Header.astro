@@ -1,0 +1,55 @@
+---
+import PhoneCta from "./PhoneCta.astro";
+import { site } from "../lib/site";
+import { getService } from "../data/services";
+
+const navSlugs = [
+  "water-softener-installation-salt-lake-city",
+  "water-softener-repair-salt-lake-city",
+  "salt-free-water-softener-salt-lake-city",
+  "whole-house-water-filtration-salt-lake-city",
+  "water-quality-testing-salt-lake-city",
+];
+const navLinks = navSlugs.flatMap((slug) => {
+  const s = getService(slug);
+  return s ? [{ href: `/${s.slug}/`, label: s.label }] : [];
+});
+---
+
+<header class="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
+  <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+    <a href="/" class="flex items-center gap-3" aria-label={`${site.businessName} home`}>
+      <svg class="h-10 w-10 shrink-0" viewBox="0 0 48 48" aria-hidden="true">
+        <rect width="48" height="48" rx="12" fill="#0B3A55" />
+        <path d="M24 8c0 0-11 13.5-11 21a11 11 0 0022 0c0-7.5-11-21-11-21z" fill="#fff" />
+        <path d="M18 31c1.5 3 4 4.5 7 4.5" stroke="#C2410C" stroke-width="2.6" stroke-linecap="round" fill="none" />
+      </svg>
+      <span class="font-heading text-xl leading-tight tracking-tight text-primary sm:text-2xl">{site.businessName}</span>
+    </a>
+
+    <nav aria-label="Main" class="hidden items-center gap-6 lg:flex">
+      {navLinks.map((l) => <a href={l.href} class="text-sm font-semibold text-ink hover:text-accent">{l.label}</a>)}
+      <a href="/#areas" class="text-sm font-semibold text-ink hover:text-accent">Areas We Serve</a>
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <div class="hidden sm:block"><PhoneCta /></div>
+      <details class="relative lg:hidden">
+        <summary class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-brand border border-line text-primary" aria-label="Open menu">
+          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </summary>
+        <div class="absolute right-0 top-14 w-64 rounded-brand border border-line bg-white p-3 shadow-float">
+          <ul class="flex flex-col">
+            {navLinks.map((l) => (
+              <li><a href={l.href} class="block rounded-brand px-3 py-3 font-semibold text-ink hover:bg-primary-light">{l.label}</a></li>
+            ))}
+            <li><a href="/#areas" class="block rounded-brand px-3 py-3 font-semibold text-ink hover:bg-primary-light">Areas We Serve</a></li>
+            <li class="mt-2"><PhoneCta class="w-full" /></li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>

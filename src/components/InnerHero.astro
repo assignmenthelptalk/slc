@@ -1,0 +1,25 @@
+---
+import Breadcrumbs from "./Breadcrumbs.astro";
+
+interface Props {
+  trail: { name: string; href?: string }[];
+  h1: string;
+  lead: string;
+}
+const { trail, h1, lead } = Astro.props;
+---
+
+<section class="relative isolate overflow-hidden bg-primary-dark text-white">
+  <div class="absolute inset-0 -z-10 bg-linear-to-br from-primary-dark via-primary to-primary-dark"></div>
+  <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
+    <Breadcrumbs trail={trail} />
+    <h1 class="mt-6 max-w-4xl text-4xl text-white sm:text-5xl">{h1}</h1>
+    <p class="mt-5 max-w-3xl text-lg text-white/90 sm:text-xl">{lead}</p>
+    <a
+      href="#estimate"
+      class="mt-8 inline-flex items-center justify-center rounded-brand bg-accent px-7 py-3.5 text-lg font-semibold text-white shadow-float transition-transform hover:-translate-y-0.5 hover:bg-accent-dark active:scale-[0.98]"
+    >
+      Get a Free Estimate
+    </a>
+  </div>
+</section>

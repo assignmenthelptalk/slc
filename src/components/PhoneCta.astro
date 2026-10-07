@@ -1,0 +1,34 @@
+---
+import { site, hasPhone, telHref } from "../lib/site";
+
+interface Props {
+  /** Visual treatment: solid accent button or light text link */
+  variant?: "solid" | "outline" | "text";
+  class?: string;
+}
+const { variant = "solid", class: extra = "" } = Astro.props;
+
+const base =
+  "inline-flex items-center justify-center gap-2 rounded-brand px-5 py-3 font-semibold transition-transform active:scale-[0.98] hover:-translate-y-0.5";
+const styles = {
+  solid: "bg-accent text-white shadow-card hover:bg-accent-dark",
+  outline: "border-2 border-white/70 text-white hover:bg-white/10",
+  text: "text-primary hover:text-accent",
+};
+const classes = `${base} ${styles[variant]} ${extra}`;
+---
+
+{
+  hasPhone ? (
+    <a href={telHref(site.phoneNumber)} class={classes}>
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2a1 1 0 011-.25 11.4 11.4 0 003.6.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.6a1 1 0 01-.25 1z" />
+      </svg>
+      <span>{site.phoneNumber}</span>
+    </a>
+  ) : (
+    <a href="/#estimate" class={classes}>
+      <span class="whitespace-nowrap">Free Estimate</span>
+    </a>
+  )
+}

@@ -1,0 +1,57 @@
+---
+import { site, hasPhone, telHref, activeSocials } from "../lib/site";
+import { services } from "../data/services";
+import { locations } from "../data/locations";
+
+const year = new Date().getFullYear();
+const link = "text-white/80 hover:text-white underline-offset-4 hover:underline";
+---
+
+<footer class="bg-primary-dark text-white">
+  <div class="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4">
+    <div>
+      <a href="/" class="font-heading text-2xl tracking-tight text-white">{site.businessName}</a>
+      <p class="mt-3 text-white/75">
+        Water softener installation, repair, and treatment systems for homeowners in {site.city}, {site.stateAbbr} and the surrounding valley.
+      </p>
+      <address class="mt-4 not-italic text-white/85">
+        {hasPhone && (
+          <p><a href={telHref(site.phoneNumber)} class="text-lg font-semibold text-white">{site.phoneNumber}</a></p>
+        )}
+        {site.address && <p>{site.address}</p>}
+        <p>{site.city}, {site.stateAbbr}</p>
+      </address>
+    </div>
+
+    <nav aria-label="Services">
+      <p class="font-body text-sm font-bold uppercase tracking-wider text-white/60">Services</p>
+      <ul class="mt-4 space-y-2">
+        {services.map((s) => <li><a href={`/${s.slug}/`} class={link}>{s.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <nav aria-label="Service areas">
+      <p class="font-body text-sm font-bold uppercase tracking-wider text-white/60">Areas We Serve</p>
+      <ul class="mt-4 grid grid-cols-2 gap-x-4 gap-y-2">
+        {locations.map((l) => <li><a href={`/${l.slug}/`} class={link}>{l.city}</a></li>)}
+      </ul>
+    </nav>
+
+    <div>
+      <p class="font-body text-sm font-bold uppercase tracking-wider text-white/60">Follow Us</p>
+      {activeSocials.length > 0 ? (
+        <ul class="mt-4 space-y-2">
+          {activeSocials.map((s) => (
+            <li><a href={s.url} rel="me noopener" target="_blank" class={link}>{s.label}</a></li>
+          ))}
+        </ul>
+      ) : (
+        <p class="mt-4 text-white/60">Social profiles coming soon.</p>
+      )}
+      <a href="/#estimate" class="mt-6 inline-flex rounded-brand bg-accent px-5 py-3 font-semibold text-white hover:bg-accent-dark">Get a Free Estimate</a>
+    </div>
+  </div>
+  <div class="border-t border-white/10 px-4 py-6 text-center text-sm text-white/60">
+    &copy; {year} {site.businessName}. All rights reserved. Serving {site.city}, {site.state}.
+  </div>
+</footer>
